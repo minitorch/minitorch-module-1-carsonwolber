@@ -28,7 +28,7 @@ def central_difference(f: Any, *vals: Any, arg: int = 0, epsilon: float = 1e-6) 
     forwardls[arg] += epsilon
     backwardls[arg] -= epsilon
 
-    return (f(*forwardls) + f(*backwardls))/(2*epsilon)
+    return (f(*forwardls) - f(*backwardls))/(2*epsilon)
 
 
 
