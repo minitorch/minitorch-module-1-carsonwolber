@@ -20,7 +20,7 @@ def add(a: float, b:float) -> float:
   return a + b
 # - neg
 def neg(a: float) -> float:
-  return -a
+  return -1.0 * a
 # - lt
 def lt(a: float, b:float):
   return float(a < b)
@@ -46,7 +46,7 @@ def log(x: float) -> float:
   return math.log(x, math.e)
 # - exp
 def exp(x:float):
-  return math.e ** x
+  return math.exp(x)
 # - log_back
 def log_back(a: float, b: float):
   return 1/a * b
