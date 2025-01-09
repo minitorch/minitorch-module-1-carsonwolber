@@ -10,23 +10,23 @@ from typing import Callable, Iterable
 
 # Mathematical functions:
 # - mul
-def mul(a: float, b:float):
+def mul(a: float, b:float) -> float:
   return a * b 
 # - id
 def id(a): # type: ignore
   return a
 # - add
-def add(a: float, b:float):
+def add(a: float, b:float) -> float:
   return a + b
 # - neg
-def neg(a: float):
+def neg(a: float) -> float:
   return -a
 # - lt
 def lt(a: float, b:float):
-  return a < b
+  return float(a < b)
 # - eq
 def eq(a: float, b:float):
-  return a == b
+  return float(a == b)
 # - max
 def max(a: float, b:float):
   if a > b :
@@ -34,15 +34,15 @@ def max(a: float, b:float):
   return b 
 # - is_close
 def is_close(a: float, b: float):
-  return abs(a - b) < .01
+  return float(abs(a - b) < .01)
 # - sigmoid
-def sigmoid(x: float):
+def sigmoid(x: float) -> float:
   return 1.0 / (1.0 + math.e ** -x)
 # - relu
-def relu(x: float):
-  return max(x, 0)
+def relu(x: float) -> float:
+  return float(max(x, 0.0))
 # - log
-def log(x: float):
+def log(x: float) -> float:
   return math.log(x, math.e)
 # - exp
 def exp(x:float):
@@ -51,8 +51,12 @@ def exp(x:float):
 def log_back(a: float, b: float):
   return 1/a * b
 # - inv
-def inv(a: float):
-  return 1/a
+def inv(a: float) -> float:
+    if a != 0:
+        return 1/a
+    else:
+      return 1.0
+
 # - inv_back
 def inv_back(a: float, b:float):
   (-1/a**2) * b 
