@@ -172,12 +172,16 @@ class Scalar:
         assert h.last_fn is not None
         assert h.ctx is not None
 
+        local_derivs = h.last_fn._backward(h.ctx, d_output)
+
+
         ls = []
-        for i in range(len(h.inputs)):
-            var = h.inputs[i]
-            val = h.ctx.saved_values[i]
-            ls.append((var, h.last_fn._backward(val, d_output)))
+        for l in range(len(local_derivs)):
+            var = h.inputs[l]
+            ls.append((var, local_derivs[l]))
+        
         return ls
+
 
 
         
