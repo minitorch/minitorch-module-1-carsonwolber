@@ -68,37 +68,22 @@ def topological_sort(variable: Variable) -> Iterable[Variable]:
     Returns:
         Non-constant Variables in topological order starting from the right.
     """
-    ls = []
-    Q = collections.deque()
+    sorted_vars = []
+    visited = set()
     
-    Q.append(variable)
-
-    while Q:
-        v = Q.popleft()
-        ls.append(v)
-        pars = v.parents
-
-        seen = set()
-        for p in pars: 
-            if not p.is_leaf:
-                if not p.is_constant:
-                    Q.append(p)
-                    seen.add(p)
-        for p in pars: 
-            if p not in seen:
-                if not p.is_constant:
-                    Q.append(p)
-    return ls
-
-
-
-
+    def visit(var: Variable):
+        if var in visited:
+            return
+        visited.add(var)
+        
+        for parent in var.parents:
+            if not parent.is_constant:
+                visit(parent)
+                
+        sorted_vars.append(var)
     
-
-
-
-
-
+    visit(variable)
+    return sorted_vars
 
 
 def backpropagate(variable: Variable, deriv: Any) -> None:
