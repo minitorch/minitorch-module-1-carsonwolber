@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import Any, Iterable, List, Tuple
 
 from typing_extensions import Protocol
+import collections
 
 # ## Task 1.1
 # Central Difference calculation
@@ -67,8 +68,37 @@ def topological_sort(variable: Variable) -> Iterable[Variable]:
     Returns:
         Non-constant Variables in topological order starting from the right.
     """
-    # TODO: Implement for Task 1.4.
-    raise NotImplementedError("Need to implement for Task 1.4")
+    ls = []
+    Q = collections.deque()
+    
+    Q.append(variable)
+
+    while Q:
+        v = Q.popleft()
+        ls.append(v)
+        pars = v.parents
+
+        seen = set()
+        for p in pars: 
+            if not p.is_leaf:
+                if not p.is_constant:
+                    Q.append(p)
+                    seen.add(p)
+        for p in pars: 
+            if p not in seen:
+                if not p.is_constant:
+                    Q.append(p)
+    return ls
+
+
+
+
+    
+
+
+
+
+
 
 
 def backpropagate(variable: Variable, deriv: Any) -> None:
@@ -82,8 +112,10 @@ def backpropagate(variable: Variable, deriv: Any) -> None:
 
     No return. Should write to its results to the derivative values of each leaf through `accumulate_derivative`.
     """
-    # TODO: Implement for Task 1.4.
-    raise NotImplementedError("Need to implement for Task 1.4")
+    leaves = variable.accumulate_derivative(variable)
+    for leaf in leaves:
+        leaf.apply(deriv)
+
 
 
 @dataclass
