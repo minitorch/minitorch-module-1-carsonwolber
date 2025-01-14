@@ -109,7 +109,7 @@ class Mul(ScalarFunction):
     @staticmethod
     def backward(ctx: Context, d_output: float) -> Tuple[float, float]:
         (a,b) = ctx.saved_values
-        return (a*d_output, b*d_output)
+        return a*d_output, b*d_output
 
 
 class Inv(ScalarFunction):
@@ -122,9 +122,8 @@ class Inv(ScalarFunction):
 
     @staticmethod
     def backward(ctx: Context, d_output: float) -> float:
-        (a,) = ctx.saved_values
-        return -1/a**2 * d_output
-
+        a = ctx.saved_values
+        return operators.inv_back(a, d_output)
 
 class Neg(ScalarFunction):
     "Negation function"
@@ -165,10 +164,7 @@ class ReLU(ScalarFunction):
     @staticmethod
     def backward(ctx: Context, d_output: float) -> float:
         (a,) = ctx.saved_values
-        if a > 0: 
-            return d_output
-        else:
-            return 0
+        return operators.relu_back(a, d_output)
 
 
 class Exp(ScalarFunction):
@@ -195,7 +191,7 @@ class LT(ScalarFunction):
 
     @staticmethod
     def backward(ctx: Context, d_output: float) -> Tuple[float, float]:
-        return (0.0, 0.0)
+        return 0.0, 0.0
 
 
 class EQ(ScalarFunction):
@@ -208,4 +204,4 @@ class EQ(ScalarFunction):
 
     @staticmethod
     def backward(ctx: Context, d_output: float) -> Tuple[float, float]:
-        return (0.0, 0.0)
+        return 0.0, 0.0

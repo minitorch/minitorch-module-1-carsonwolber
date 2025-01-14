@@ -69,21 +69,24 @@ def topological_sort(variable: Variable) -> Iterable[Variable]:
         Non-constant Variables in topological order starting from the right.
     """
     ls = []
-    Q = collections.deque()
-    Q.append(variable)
-    seen = set()
-    process = set()
-    process.add(variable)
-    while Q:
-        n = Q.popleft()
-        for m in n.parents:
-            if m not in process and m not in seen and not m.is_constant:
-                process.add(m)
-                Q.append(m)
-        process.remove(n)
-        seen.add(n)
-        ls.append(n)
+    visited = set()
+
+
+    def visit(var):
+        if var.unique_id in visited:
+            return
+        if not var.is_leaf:
+            for p in var.parents:
+                if not p.is_constant():
+                    visit(p)
+        visited.add(var.unique_id)
+        ls.insert(0, var)
+    
+    visit(variable)
     return ls
+
+
+
 
 
 def backpropagate(variable: Variable, deriv: Any) -> None:
@@ -98,20 +101,19 @@ def backpropagate(variable: Variable, deriv: Any) -> None:
     No return. Should write to its results to the derivative values of each leaf through `accumulate_derivative`.
     """
     nodes = topological_sort(variable)
-    output = deriv
-    for n in nodes: 
-        parents = n.chain_rule(output)
-        for p, d in parents:
-            if p.is_leaf:
-                p.accumulate_derivative(d)
+    directory = {}
+    directory[variable.unique_id] = deriv
+    for n in nodes:
+        d = directory[n.unique_id]
+        if not n.is_leaf():
+            for v, de in n.chain_rule(d):
+                if v.unique_id not in directory:
+                    directory[v.unique_id] = 0.0
+                directory[v.unique_id] += de
+        else:
+            n.accumulate_derivative(d)
     
             
-
-
-
-
-
-
 @dataclass
 class Context:
     """
