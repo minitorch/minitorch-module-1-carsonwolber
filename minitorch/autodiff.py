@@ -86,14 +86,6 @@ def topological_sort(variable: Variable) -> Iterable[Variable]:
     return ls
 
 
-
-
-
-
-    
-    
-
-
 def backpropagate(variable: Variable, deriv: Any) -> None:
     """
     Runs backpropagation on the computation graph in order to
@@ -105,9 +97,18 @@ def backpropagate(variable: Variable, deriv: Any) -> None:
 
     No return. Should write to its results to the derivative values of each leaf through `accumulate_derivative`.
     """
-    leaves = variable.accumulate_derivative(variable)
-    for leaf in leaves:
-        leaf.apply(deriv)
+    nodes = topological_sort(variable)
+    output = deriv
+    for n in nodes: 
+        parents = n.chain_rule(output)
+        for p, d in parents:
+            if p.is_leaf:
+                p.accumulate_derivative(d)
+    
+            
+
+
+
 
 
 
