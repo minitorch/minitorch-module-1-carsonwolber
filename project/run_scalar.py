@@ -40,8 +40,15 @@ class Linear(minitorch.Module):
             )
 
     def forward(self, inputs):
-        # TODO: Implement for Task 1.5.
-        raise NotImplementedError("Need to implement for Task 1.5")
+        score = 0 
+        b = [i.value for i in self.bias]
+        for x,y in enumerate(inputs):
+            for j in range(len(b)):
+                b[j] = b[j] + x * self.weights[x][j]
+
+        
+
+
 
 
 def default_log_fn(epoch, total_loss, correct, losses):
