@@ -183,10 +183,6 @@ class Scalar:
         return ls
 
 
-
-        
-
-
     def backward(self, d_output: Optional[float] = None) -> None:
         """
         Calls autodiff to fill in the derivatives for the history of this object.

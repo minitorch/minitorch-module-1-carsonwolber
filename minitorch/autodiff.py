@@ -71,12 +71,11 @@ def topological_sort(variable: Variable) -> Iterable[Variable]:
     ls = []
     visited = set()
 
-
     def visit(var):
         if var.unique_id in visited:
             return
-        if not var.is_leaf:
-            for p in var.parents:
+        if not var.is_leaf():
+            for p in var.history.inputs:
                 if not p.is_constant():
                     visit(p)
         visited.add(var.unique_id)
@@ -84,9 +83,6 @@ def topological_sort(variable: Variable) -> Iterable[Variable]:
     
     visit(variable)
     return ls
-
-
-
 
 
 def backpropagate(variable: Variable, deriv: Any) -> None:
@@ -101,14 +97,13 @@ def backpropagate(variable: Variable, deriv: Any) -> None:
     No return. Should write to its results to the derivative values of each leaf through `accumulate_derivative`.
     """
     nodes = topological_sort(variable)
-    directory = {}
+
+    directory = collections.defaultdict(float)
     directory[variable.unique_id] = deriv
     for n in nodes:
         d = directory[n.unique_id]
         if not n.is_leaf():
             for v, de in n.chain_rule(d):
-                if v.unique_id not in directory:
-                    directory[v.unique_id] = 0.0
                 directory[v.unique_id] += de
         else:
             n.accumulate_derivative(d)
