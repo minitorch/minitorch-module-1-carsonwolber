@@ -59,7 +59,7 @@ def inv(a: float) -> float:
 
 # - inv_back
 def inv_back(a: float, b:float):
-  (-1/a**2) * b 
+  return (-1/a**2) * b 
 # - relu_back
 def relu_back(x: float, y:float):
   if max(x,0) == x:
