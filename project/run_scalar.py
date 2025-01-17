@@ -44,8 +44,8 @@ class Linear(minitorch.Module):
         b = [i.value for i in self.bias]
         for x,y in enumerate(inputs):
             for j in range(len(b)):
-                b[j] = b[j] + y * self.weights[x][j]
-        return 
+                b[j] = b[j] + y * self.weights[x][j].value
+        return b
 
         
 
